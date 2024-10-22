@@ -1,0 +1,764 @@
+//
+//  ContentView.swift
+//  PhotoTravel1
+//
+//  Created by Martin Ramirez on 7/28/24.
+// Edited August 18 2024
+
+import SwiftUI
+import MapKit
+import GoogleMobileAds
+
+struct Landmark: Identifiable {
+    let id = UUID()
+    let name: String
+    let coordinate: CLLocationCoordinate2D
+    let imageNames: [String]
+    let city: String
+    let state: String
+    let tipsAndTricks: [String]
+}
+//This are all the landmarks with the variables that are specificed in the beggining.
+let landmarks = [
+    Landmark(
+        name: "Statue of Liberty",
+        coordinate: CLLocationCoordinate2D(latitude: 40.6892, longitude: -74.0445),
+        imageNames: ["Liberty1", "Liberty2", "Liberty3"],
+        city: "New York",
+        state: "New York",
+        tipsAndTricks: [
+            "Golden Hours: The best times to photograph the Statue of Liberty are during the golden hours—early morning (just after sunrise) and late afternoon (just before sunset). The warm light during these times adds a beautiful glow to the statue and can enhance the overall composition.",
+            "Sunrise: Sunrise is a fantastic time to photograph the Statue of Liberty, especially from the eastern side. The light is soft, and the statue is beautifully illuminated with fewer crowds around.",
+            "Sunset: Late afternoon offers warm, rich lighting that can create dramatic shadows. Photographing the statue against the setting sun can result in stunning silhouettes or warm, detailed shots.",
+            "Liberty Island: If you’re on Liberty Island, the best vantage points are from the base looking up at the statue. This angle emphasizes the statue’s height and grandeur.",
+            "Battery Park: From Battery Park, you can capture the statue with the Manhattan skyline in the background, especially at sunrise or sunset. The park’s distance from the statue allows you to frame it within the context of the city.",
+            "Staten Island Ferry: The Staten Island Ferry offers a great opportunity to photograph the Statue of Liberty from the water. The ferry ride is free, and you can capture the statue from different angles as the ferry passes by.",
+            "Governors Island: From Governors Island, you can get a unique perspective of the Statue of Liberty with the lower Manhattan skyline in the background.",
+            "Brooklyn Bridge Park: This spot provides a stunning view of the Statue of Liberty with the Brooklyn Bridge and lower Manhattan in the background. It's a great location for sunrise or sunset shots.",
+            "Wide Angles: Use a wide-angle lens to capture the statue in its entirety along with the surrounding environment. This perspective can help convey the scale of the statue against the backdrop of New York Harbor.",
+            "Low Angles: Shooting from a low angle at the base of the statue emphasizes its height and grandeur. This angle works particularly well when shooting upwards towards the statue against the sky.",
+            "Close-ups: Zoom in to capture details like the statue’s face, torch, or crown. These close-ups can add an intimate and detailed perspective to your collection.",
+            "Silhouettes: During sunrise or sunset, you can create dramatic silhouette shots by positioning the statue between your camera and the sun. This technique highlights the statue’s iconic shape against a colorful sky.",
+            "Reflections: On a calm day, look for reflections of the Statue of Liberty in the water around Liberty Island or from a distance in New York Harbor. Reflections add an interesting element to your composition.",
+            "Weather: On clear days, the contrast between the statue and the blue sky is striking. Cloudy or foggy days can add a moody atmosphere, while night photography offers beautifully illuminated shots.",
+            "Gear: Bring a versatile zoom lens, tripod, and filters such as a polarizer or ND filter for best results.",
+            "Avoid Crowds: Visit early in the morning or during off-peak seasons to avoid large crowds and get the best shots."
+        ]
+    ),
+    Landmark(
+        name: "Eiffel Tower",
+        coordinate: CLLocationCoordinate2D(latitude: 48.8584, longitude: 2.2945),
+        imageNames: ["Eiffel1", "Eiffel2","Eiffel3"],
+        city: "Paris",
+        state: "Île-de-France",
+        tipsAndTricks: [
+            "Golden Hours: The best times to photograph the Eiffel Tower are during the golden hours—early morning (just after sunrise) and late afternoon (just before sunset). The warm light during these times adds a beautiful glow to the tower, enhancing your photos.",
+            "Sunrise: Early morning is ideal for capturing the Eiffel Tower with soft, diffused light and fewer crowds. The calm atmosphere also allows you to experiment with reflections in nearby water sources, like the fountains at Trocadéro.",
+            "Sunset: Sunset offers warm, rich lighting that can create dramatic shadows. The transition from day to night, with the tower gradually lighting up, is perfect for capturing stunning images.",
+            "Night: The Eiffel Tower is spectacularly lit at night. Every hour on the hour, it sparkles for five minutes. Long-exposure shots during this time can create magical images of the tower glowing against the Parisian night sky.",
+            "Trocadéro: The Trocadéro Gardens offer one of the most iconic views of the Eiffel Tower. Capture the tower with the fountains in the foreground, creating a classic Parisian scene. This location is particularly stunning at sunrise and sunset.",
+            "Pont de Bir-Hakeim: This bridge offers a great vantage point to capture the Eiffel Tower framed by the arches of the bridge. It's a popular spot for cinematic shots, especially at sunrise. The houseboats along the Seine can add an extra element to your composition.",
+            "Champ de Mars: Located right in front of the Eiffel Tower, the Champ de Mars park allows you to capture the tower from various angles, with plenty of open space for creative compositions. This is a great spot for night photography.",
+            "Rue de l’Université: This street offers a unique view of the Eiffel Tower between classic Parisian buildings. It's a great spot for a more intimate and urban shot of the tower.",
+            "Seine River Cruises: Taking a cruise on the Seine River provides the opportunity to photograph the Eiffel Tower from a different perspective. The reflections of the tower in the water during sunset or at night can make for stunning images.",
+            "Montparnasse Tower: For an aerial view, head to the observation deck of the Montparnasse Tower. Capture the Eiffel Tower within the context of the Paris skyline, especially during sunset or at night.",
+            "Wide Angles: Use a wide-angle lens to capture the Eiffel Tower along with its surroundings, like the gardens or the Seine River. This helps convey the scale of the tower and its relationship with the city.",
+            "Low Angles: Shooting from a low angle, especially at the base of the tower, emphasizes its towering height and grandeur. This can create a dramatic effect, particularly when the sky has interesting cloud formations.",
+            "Symmetry: The Eiffel Tower is highly symmetrical. Consider using a centered composition to highlight this symmetry. Locations like Trocadéro and Champ de Mars are perfect for this type of shot.",
+            "Framing: Use elements like trees, bridges, or Parisian architecture to frame the Eiffel Tower in your shots. This adds depth and context to your images, making them more visually engaging.",
+            "Reflections: Look for opportunities to capture the Eiffel Tower reflected in water, such as the fountains at Trocadéro or the Seine River. Reflections can add a creative and artistic touch to your photos.",
+            "Silhouettes: At sunrise or sunset, position the Eiffel Tower between your camera and the sun to create a striking silhouette against the colorful sky.",
+            "Weather: Clear days make the tower stand out against a blue sky, while cloudy, foggy, or rainy days can add mood and unique reflections.",
+            "Gear: Bring a wide-angle lens, a tripod for night shots, and consider filters like a polarizer or ND filter for enhancing your images."
+        ]
+    ),
+    Landmark(
+        name: "Great Wall of China",
+        coordinate: CLLocationCoordinate2D(latitude: 40.4319, longitude: 116.5704),
+        imageNames: ["GreatWall1", "GreatWall2", "GreatWall3"],
+        city: "Beijing",
+        state: "Beijing Municipality",
+        tipsAndTricks: [
+            "Golden Hours: The best times to shoot are during the golden hours—early morning and late afternoon. The soft light during these times casts long shadows and adds warmth, highlighting the textures of the Wall and the surrounding landscape.",
+            "Sunrise: Sunrise shots often result in fewer tourists and a serene atmosphere. It's an excellent time for capturing the Wall with a soft, diffused light.",
+            "Sunset: The warm colors of the sunset can make for dramatic and colorful photos, especially if you catch the sun setting behind the Wall.",
+            "Mutianyu Section: This section is well-preserved, less crowded than Badaling, and offers stunning views with lush greenery. The Watchtowers here provide great framing opportunities.",
+            "Jinshanling Section: Known for its steep climbs and panoramic views, this section is ideal for capturing the Wall snaking across the mountains. It’s also less crowded, providing a more authentic experience.",
+            "Simatai Section: This section is known for its ruggedness and offers great opportunities for both day and night photography. Night shots here can be particularly striking with the Wall illuminated.",
+            "Jiankou Section: For those looking for more adventurous shots, Jiankou is the most photogenic and wild section. It’s less restored, with dramatic angles and overgrown vegetation, perfect for unique and powerful images.",
+            "Wide Angles: Use a wide-angle lens to capture the Wall stretching across the landscape. This perspective highlights the Wall’s length and the surrounding scenery.",
+            "Leading Lines: The Great Wall naturally creates leading lines that draw the viewer’s eye into the photo. Use these lines to lead towards a point of interest, such as a watchtower or a distant peak.",
+            "Low Angles: Shooting from a low angle can make the Wall look more imposing and dramatic. It emphasizes the scale and grandeur of the structure.",
+            "Foreground Interest: Include elements like trees, flowers, or rocks in the foreground to add depth to your photos. This also helps to create a sense of scale.",
+            "Weather: On clear days, the contrast between the Wall and the blue sky is striking. Foggy or cloudy days create a mystical atmosphere, while winter snow offers unique photo opportunities.",
+            "Gear: Bring a range of lenses, from wide-angle to zoom. A tripod is essential for sunrise, sunset, or night photography.",
+            "Avoid Crowds: Visit less popular sections or go early in the morning to avoid large crowds, which can make it difficult to capture clean, unobstructed shots."
+        ]
+    ),
+    Landmark(
+        name: "Tower of Pisa",
+        coordinate: CLLocationCoordinate2D(latitude: 43.7228, longitude: 10.3966),
+        imageNames: ["Pisa1", "Pisa2", "Pisa3"],
+        city: "Pisa",
+        state: "Tuscany",
+        tipsAndTricks: [
+            "Golden Hours: The best times to photograph the Leaning Tower of Pisa are during the golden hours—early morning (just after sunrise) and late afternoon (just before sunset). The soft, warm light during these times creates beautiful shadows and highlights the tower’s unique structure.",
+            "Sunrise: Early morning is particularly advantageous because the area is less crowded. The soft, diffused light at this time enhances the details of the tower and the surrounding architecture.",
+            "Sunset: During sunset, the tower is bathed in warm, golden light, which adds depth and dimension to your photos. The transition from day to night offers opportunities for capturing the tower with the sky changing colors.",
+            "Night: The Leaning Tower of Pisa is beautifully illuminated at night, making it an excellent time for long-exposure photography. The tower’s glow against the night sky creates a dramatic and atmospheric shot.",
+            "Piazza dei Miracoli: The square where the Leaning Tower is located offers multiple vantage points. Capture the tower along with the Cathedral and Baptistery to emphasize the grandeur of the complex.",
+            "From the Base: Standing close to the base and shooting upwards emphasizes the tower's tilt. This angle can create a dramatic effect, especially with a wide-angle lens.",
+            "From the Walls of Pisa: If you climb the medieval walls surrounding the Piazza dei Miracoli, you can get a unique aerial perspective of the Leaning Tower, along with the surrounding square.",
+            "Via Santa Maria: This street leading to the Piazza dei Miracoli offers a picturesque view of the Leaning Tower framed by the surrounding buildings. It's a great spot for capturing the tower within the context of the city.",
+            "Opposite the Tower: Standing on the opposite side of the tower from the entrance to the square allows you to capture its full lean, along with the other buildings in the background.",
+            "Classic Tourist Shots: The Leaning Tower of Pisa is famous for the classic “holding up the tower” pose. While it’s a cliché, it’s still a fun and creative way to play with perspective. Experiment with different angles to get unique versions of this shot.",
+            "Wide Angles: Use a wide-angle lens to capture the entire Piazza dei Miracoli complex. This helps convey the scale of the tower in relation to the other historical structures.",
+            "Low Angles: Shooting from a low angle emphasizes the tower’s lean and height. This angle works well with dramatic skies or at sunset.",
+            "Symmetry: Try capturing the tower from a centered perspective, highlighting its lean against the symmetrical backdrop of the Cathedral. This creates a striking contrast between the tower’s unique tilt and the straight lines of the surrounding architecture.",
+            "Details: Don’t forget to zoom in on the intricate details of the tower, such as the arches, columns, and the texture of the marble. Close-up shots of these elements add variety to your photo collection.",
+            "Weather Considerations: Clear days provide a strong contrast between the tower’s white marble and the blue sky, making the tower stand out sharply. Cloudy, rainy, or foggy days can add unique moods to your photos.",
+            "Gear: Bring a wide-angle lens, a tripod for night shots, and consider filters like a polarizer or ND filter for enhancing your images."
+        ]
+    ),
+    Landmark(
+        name: "Taj Mahal",
+        coordinate: CLLocationCoordinate2D(latitude: 27.1751, longitude: 78.0421),
+        imageNames: ["TajMahal1", "TajMahal2", "TajMahal3"],
+        city: "Agra",
+        state: "Uttar Pradesh",
+        tipsAndTricks: [
+            "Visit early in the morning to avoid crowds and heat.",
+            "Golden Hours: The best times to photograph the Taj Mahal are during the golden hours—early morning (just after sunrise) and late afternoon (just before sunset). The soft, warm light during these times enhances the white marble and creates beautiful shadows.",
+            "Dress modestly and respectfully as it is a religious site.",
+            "Sunrise: Early morning is ideal for photographing the Taj Mahal. The site is less crowded, and the morning light casts a soft glow on the marble, making it look almost ethereal. The reflection of the sunrise on the Yamuna River adds to the beauty.",
+            "Sunset: During sunset, the Taj Mahal takes on a warm, golden hue. The changing colors of the sky create a dramatic backdrop, and the reflection in the water features adds depth to your photos.",
+            "Full Moon: The Taj Mahal is open for night viewing during the full moon, when the soft, silvery moonlight gives the monument a mystical appearance, perfect for long-exposure shots.",
+            "From the Main Gate (Darwaza): Capture the iconic view of the Taj Mahal framed by the arch of the main gate, with the reflecting pool leading the eye towards the monument.",
+            "Central Water Tank: Position yourself at the central water tank in the Charbagh to capture a symmetrical reflection of the Taj Mahal in the water.",
+            "From the Yamuna River: Head to the banks of the Yamuna River behind the Taj Mahal for a unique perspective, especially during sunrise or sunset.",
+            "From the Mehtab Bagh: The garden across the Yamuna River offers a great vantage point for photographing the Taj Mahal with fewer crowds, especially at sunset.",
+            "From the Mosque or Guest House: Use the archways of these buildings to frame the Taj Mahal in your shots, adding depth and context.",
+            "Symmetry: Emphasize the Taj Mahal's perfect symmetry by centering your shot or capturing the symmetrical reflection in the pool.",
+            "Reflections: Utilize the reflecting pools to capture stunning reflection shots of the Taj Mahal. Position yourself low to maximize the reflection in your frame.",
+            "Details: Zoom in on the intricate details like inlaid marble, calligraphy, and floral designs for close-up shots that add variety to your photo collection.",
+            "Low Angles: Shooting from a low angle can emphasize the height and grandeur of the Taj Mahal, especially when capturing the central dome or the towering minarets.",
+            "People & Scale: Including people in your shots provides a sense of scale and highlights the monument's size. Look for moments where visitors are admiring the Taj or dressed in colorful attire.",
+            "Weather Considerations: Clear days provide strong contrast, while foggy mornings add a mystical atmosphere. Monsoon season offers dramatic clouds and enhanced greenery.",
+            "Be Patient: Wait for the right light, the perfect reflection, or the ideal moment when the crowd clears to capture unique shots of the Taj Mahal."
+        ]
+    ),
+    Landmark(
+        name: "Colosseum",
+        coordinate: CLLocationCoordinate2D(latitude: 41.8902, longitude: 12.4922),
+        imageNames: ["Colosseum1", "Colosseum2", "Colosseum3"],
+        city: "Rome",
+        state: "Lazio",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon provides the best light for photos.",
+            "Blue Hour: Capture dramatic, moody shots just before sunrise or after sunset.",
+            "Classic Front Elevation: A frontal shot from the main entrance is a strong, iconic view.",
+            "Side Views: Experiment with side angles to capture the depth and structure.",
+            "From the Opposite Side: The view from the eastern side offers a unique perspective with the Forum Romanum in the background.",
+            "Close-ups: Focus on architectural details like arches, columns, and textures.",
+            "Interior Shots: Capture the grandeur of the arena and intricate details from different levels if possible.",
+            "Leading Lines: Use arches and corridors to create leading lines that draw the viewer’s eye into the photograph.",
+            "Foreground Interest: Include elements in the foreground to add depth, such as parts of surrounding ruins or grass.",
+            "Symmetry and Patterns: Utilize the Colosseum’s design for symmetrical shots and interesting patterns.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the Colosseum.",
+            "Tripod: Useful for low-light conditions or long-exposure shots, especially during the blue hour or at night.",
+            "Avoid Crowds: Early morning or later in the afternoon usually means fewer tourists for clearer shots.",
+            "Check the Weather: Clear days are ideal, but a moody sky can add drama to your photos.",
+            "Respect the Site: Follow rules and guidelines to preserve the Colosseum and ensure a good experience for all visitors."
+        ]
+    ),
+    Landmark(
+        name: "La Sagrada Familia",
+        coordinate: CLLocationCoordinate2D(latitude: 41.4036, longitude: 2.1744),
+        imageNames: ["Sagrada1", "Sagrada2", "Sagrada3"],
+        city: "Barcelona",
+        state: "Catalonia",
+        tipsAndTricks: [
+            "Golden Hour: Capture dramatic effects with long shadows and a golden hue during early morning or late afternoon.",
+            "Blue Hour: Use the serene, diffused light just before sunrise or after sunset for magical shots, especially if the basilica is lit up.",
+            "Front Facade: Capture the grandeur of the Nativity or Passion Facade from directly in front for dramatic views.",
+            "Side Views: Get unique perspectives of the basilica’s detailed side elements and tower shapes.",
+            "From the Park: Use viewpoints like Plaça de Gaudí to include water features or greenery in your shots.",
+            "Interior Shots: Focus on the play of light through stained glass windows and the forest-like columns. Shoot upwards to capture the soaring ceiling.",
+            "Details and Close-Ups: Highlight the ornate facades, textures, and colorful stained glass windows.",
+            "Leading Lines: Utilize architectural lines and columns to create leading lines that draw the viewer’s eye.",
+            "Foreground Interest: Include nearby trees, sculptures, or fountains to add depth and context to your photos.",
+            "Symmetry and Patterns: Leverage the basilica’s symmetrical design and patterns for compelling compositions.",
+            "Reflections: Use water in nearby areas to capture reflections of the basilica for a creative touch.",
+            "Wide-Angle Lens: Ideal for capturing the scale of the basilica and interiors.",
+            "Tripod: Useful for low-light conditions or detailed interior shots.",
+            "Telephoto Lens: Good for focusing on details of the facades or capturing distant architectural elements.",
+        ]
+    ),
+    Landmark(
+        name: "Sydney Opera House",
+        coordinate: CLLocationCoordinate2D(latitude: -33.8568, longitude: 151.2153),
+        imageNames: ["Sydney1", "Sydney2", "Sydney3"],
+        city: "Sydney",
+        state: "New South Wales",
+        tipsAndTricks: [
+           "Golden Hour: Early morning or late afternoon light enhances the curves and textures with a warm glow.",
+            "Blue Hour: Capture the Opera House in the cool, diffused light just before sunrise or after sunset for a dramatic effect.",
+            "Nighttime: The Opera House is beautifully lit at night; capture it against the dark sky to highlight the illuminated sails.",
+            "Front View: A classic shot from directly in front of the sails provides the most recognizable perspective.",
+            "Side Views: Photograph from the side or at an angle to emphasize the sail-like design and roof curvature.",
+            "The Harbour: Capture the Opera House from a boat or ferry with the Sydney Harbour Bridge in the background for a great view.",
+            "Circular Quay: Use this area to frame the Opera House with the city skyline or waterfront.",
+            "Mrs Macquarie’s Chair: This spot offers a panoramic view of the Opera House and Harbour Bridge, perfect for wide shots.",
+            "Close-ups: Focus on the tile patterns and textures of the sails for a more abstract, artistic approach.",
+            "Leading Lines: Utilize nearby stairs or railings to create lines that guide the viewer’s eye toward the Opera House.",
+            "Reflections: Capture reflections in the surrounding water for an interesting and creative composition.",
+            "Foreground Interest: Include elements like the park or boats in the harbor to add depth and context.",
+            "Symmetry and Patterns: Use the symmetrical design of the sails and tile patterns for striking compositions.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the Opera House and its surroundings.",
+            "Telephoto Lens: Useful for detailed shots of the sails or distant architectural elements.",
+            "Tripod: Useful for low-light conditions or night photography to keep shots steady."
+        ]
+    ),
+    Landmark(
+        name: "The Great Pyramid of Giza",
+        coordinate: CLLocationCoordinate2D(latitude: 29.9792, longitude: 31.1342),
+        imageNames: ["Giza1", "Giza2", "Giza3"],
+        city: "Giza",
+        state: "Giza Governorate",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon light enhances the pyramid’s textures and shadows with a warm glow.",
+            "Midday: Strong contrasts and shadows can highlight the pyramid’s details but may require careful exposure handling.",
+            "Sunrise and Sunset: Capture the pyramids with the changing sky colors for a dramatic effect.",
+            "Nighttime: Consider photographing the pyramids illuminated or under a starry sky for a mystical effect.",
+            "Front Elevation: Classic shot from the front highlights the grandeur and symmetry of the pyramid.",
+            "Side Views: Emphasize the massive scale and stone alignment by capturing from the sides.",
+            "From a Distance: Capture from afar to provide context and highlight the pyramid’s prominence in the landscape.",
+            "Close-Ups: Focus on the texture and details of the pyramid stones for interesting patterns and historical wear.",
+            "From the Desert: Incorporate the desert landscape to add depth and context to your shots.",
+            "With the Sphinx: Include the nearby Great Sphinx for a comprehensive view of the Giza Plateau.",
+            "Leading Lines: Use the pyramid’s edges and surrounding landscape lines to guide the viewer’s eye.",
+            "Foreground Interest: Add depth with elements like sand dunes or local flora in the foreground.",
+            "Symmetry and Patterns: Utilize the pyramid’s geometric shape for symmetrical compositions and patterns.",
+            "Contextual Shots: Incorporate surrounding pyramids to provide scale and historical context.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the pyramids from a distance.",
+            "Telephoto Lens: Useful for close-up details or distant shots without distortion.",
+            "Tripod: Essential for low-light or nighttime photography to keep shots steady."
+           ]
+    ),
+    Landmark(
+        name: "Acropolis of Athens",
+        coordinate: CLLocationCoordinate2D(latitude: 37.9715, longitude: 23.7257),
+        imageNames: ["Acropolis1", "Acropolis2", "Acropolis3"],
+        city: "Athens",
+        state: "Attica",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon light enhances the texture and details of the ancient ruins.",
+            "Midday: Strong sunlight creates high-contrast images with deep shadows, highlighting stone textures but requiring careful exposure handling.",
+            "Sunrise and Sunset: The soft light at sunrise and warm hues at sunset add dramatic and ethereal qualities to your photos.",
+            "Blue Hour: Use the diffused light just before sunrise or after sunset for atmospheric shots, especially if the site is lit up.",
+            "Front Elevation: A classic shot of the Parthenon from the front highlights its grandeur and symmetry.",
+            "Side Views: Capture the Parthenon and other structures from the side to emphasize their scale and surrounding landscape.",
+            "Areopagus Hill: This vantage point offers a panoramic view of the Acropolis with the city of Athens in the background.",
+            "Philopappos Hill: Provides another excellent panoramic perspective of the Acropolis, including the surrounding hills and cityscape.",
+            "Close-Ups: Focus on detailed shots of architectural elements such as columns, friezes, and sculptures to capture craftsmanship and historical wear.",
+            "Leading Lines: Utilize the lines created by columns or pathways to guide the viewer’s eye toward the main subjects.",
+            "Foreground Interest: Include surrounding landmarks, ruins, or vegetation to add depth and context to your shots.",
+            "Symmetry and Patterns: Leverage the geometric design of columns and ruins for symmetrical and patterned compositions.",
+            "Contextual Shots: Include surrounding landmarks or the city to provide a sense of scale and historical context.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the Acropolis and its surroundings.",
+            "Telephoto Lens: Useful for detailed shots of architectural elements or distant parts of the site.",
+            "Tripod: Essential for low-light conditions such as sunrise, sunset, or blue hour to ensure steady shots."
+        ]
+    ),
+    Landmark(
+        name: "Golden Gate Bridge",
+        coordinate: CLLocationCoordinate2D(latitude: 37.8199, longitude: -122.4783),
+        imageNames: ["GoldenGate1", "GoldenGate2", "GoldenGate3"],
+        city: "San Francisco",
+        state: "California",
+        tipsAndTricks: [
+            "Bring a light jacket as it can be windy and chilly.",
+            "Golden Hour: Early morning or late afternoon provides warm, soft light that enhances the bridge’s colors and creates long, dramatic shadows.",
+            "Midday: Strong sunlight creates high-contrast images with vibrant colors but may also produce harsh shadows.",
+            "Sunrise and Sunset: The changing colors of the sky at sunrise and sunset add dramatic effects to your photos.",
+            "Blue Hour: Use the diffused light just before sunrise or after sunset for serene and atmospheric shots, especially with city lights starting to come on.",
+            "Battery Spencer: Offers a classic, sweeping view of the Golden Gate Bridge with the San Francisco skyline in the background, ideal for wide-angle shots.",
+            "Fort Point: Provides a unique perspective of the bridge’s underbelly and its massive structure.",
+            "Baker Beach: Captures the bridge with the beach and Pacific Ocean in the foreground, ideal for panoramic views.",
+            "Marin Headlands: Offers elevated views of the bridge with the city and bay in the background, perfect for wide shots and panoramas.",
+            "Crissy Field: Provides a closer view of the bridge with the beach and grass in the foreground, capturing the bridge with people and activities.",
+            "From the Golden Gate Bridge Itself: Walking or biking across the bridge gives unique perspectives and close-up shots of the structure and cables.",
+            "Leading Lines: Use the bridge’s cables and structure as leading lines to guide the viewer’s eye through the photograph.",
+            "Foreground Interest: Include elements such as the bay, nearby parks, or people to add context and depth to your shots.",
+            "Symmetry and Patterns: The geometric design and repeating patterns of the bridge can create visually compelling compositions.",
+            "Contextual Shots: Include the city skyline or surrounding landscape to provide a sense of scale and location.",
+            "Wide-Angle Lens: Ideal for capturing the full span of the bridge and its surroundings.",
+            "Telephoto Lens: Useful for detailed shots of the bridge’s structure or distant parts of the bridge.",
+            "Tripod: Essential for low-light conditions like sunrise, sunset, or blue hour to ensure steady shots.",
+        ]
+    ),
+    Landmark(
+        name: "Christ the Redeemer",
+        coordinate: CLLocationCoordinate2D(latitude: -22.9519, longitude: -43.2105),
+        imageNames: ["Christ1", "Christ2", "Christ3"],
+        city: "Rio de Janeiro",
+        state: "Rio de Janeiro",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon provides warm, soft light that enhances the statue’s details and creates dramatic shadows.",
+            "Midday: The harsh sunlight can create strong shadows and vibrant colors but may require careful exposure handling.",
+            "Sunrise and Sunset: The changing colors of the sky at these times can add a dramatic backdrop to your photos.",
+            "Blue Hour: Capture the statue against a cool, tranquil sky just before sunrise or after sunset for a serene and atmospheric effect.",
+            "From the Base: Photograph the statue from the base or at eye level to emphasize its grandeur and scale.",
+            "Wide Shots from the Observation Deck: Use wide-angle shots to capture the statue and the panoramic views of the city and bay.",
+            "Corcovado Train: Get unique angles of the statue and scenery from the train ride up the mountain.",
+            "City: Shoot from various city points, like Santa Teresa or Lapa, to include the statue with different cityscapes.",
+            "Night Shots: Capture the illuminated statue at night for a striking contrast against the dark sky.",
+            "Leading Lines: Use the landscape or cityscape as leading lines to direct the viewer’s attention to the statue.",
+            "Foreground Interest: Add depth with elements such as trees, city lights, or other landmarks in the foreground.",
+            "Symmetry and Patterns: The statue’s symmetrical design and the surrounding landscape offer visually compelling compositions.",
+            "Contextual Shots: Include the city, bay, or mountains in the background to provide scale and context.",
+            "Close-Ups: Focus on detailed shots of the statue, like the outstretched arms or facial features, to capture craftsmanship.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the statue and panoramic views.",
+            "Telephoto Lens: Useful for detailed shots or capturing the statue from a distance against the cityscape.",
+            "Tripod: Essential for low-light conditions like sunrise, sunset, or night photography to ensure steady shots."
+        ]
+    ),
+    Landmark(
+        name: "Mount Rushmore",
+        coordinate: CLLocationCoordinate2D(latitude: 43.8791, longitude: -103.4591),
+        imageNames: ["MountRushmore1", "MountRushmore2", "MountRushmore3"],
+        city: "Keystone",
+        state: "South Dakota",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon provides soft, warm light that enhances the monument’s details and creates dramatic shadows.",
+            "Midday: The harsh sunlight can produce strong shadows and high contrast, but also vibrant colors.",
+            "Sunrise and Sunset: These times add rich, colorful tones to your photos and can create a warm, golden glow.",
+            "Blue Hour: Use the soft, diffused light just before sunrise or after sunset for a serene and atmospheric shot.",
+            "Straight-On View: Capture the classic frontal view from the main viewing area to showcase the full grandeur and scale of the monument.",
+            "Side Views: Photograph the monument from the sides to highlight the depth and integration with the surrounding landscape.",
+            "Close-Ups: Focus on individual presidential faces to capture detailed expressions and craftsmanship.",
+            "Wide-Angle Shots: Use a wide-angle lens to capture the full breadth of the monument and the surrounding Black Hills landscape.",
+            "The Presidential Trail: Offers different angles and perspectives of the monument, including elevated views.",
+            "Night Shots: The monument is illuminated at night, providing a different mood and highlighting it against a dark sky.",
+            "Leading Lines: Use the surrounding landscape or monument’s base lines to guide the viewer’s eye to the carvings.",
+            "Symmetry and Patterns: The monument’s symmetrical design and repeating faces make for visually compelling compositions.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the monument and the surrounding area.",
+            "Telephoto Lens: Useful for detailed shots of individual faces and distant parts of the monument.",
+            "Tripod: Essential for low-light conditions like sunrise, sunset, or night photography to keep shots steady."
+        ]
+    ),
+    Landmark(
+        name: "Niagara Falls",
+        coordinate: CLLocationCoordinate2D(latitude: 43.0962, longitude: -79.0377),
+        imageNames: ["Niagara1", "Niagara2", "Niagara3"],
+        city: "Niagara Falls",
+        state: "Ontario/New York",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon offers warm, soft light and potentially stunning rainbows.",
+            "Midday: Bright sunlight can create strong contrasts and vibrant rainbows but be prepared for glare and overexposure.",
+            "Sunrise and Sunset: These times provide dramatic lighting and color, enhancing the falls' natural beauty.",
+            "Blue Hour: The soft, diffused light just before sunrise or after sunset can create a serene, atmospheric shot.",
+            "Front View: Capture the falls from main viewpoints on both the American and Canadian sides for a full-width perspective.",
+            "Canadian Side – Table Rock Visitor Centre: Provides close-up views of the Horseshoe Falls. Ideal for dramatic, up-close shots. Be prepared for intense mist and use weatherproof gear.",
+            "Canadian Side – Skylon Tower: Offers elevated, panoramic views of both the American and Horseshoe Falls. Excellent for sweeping, wide-angle shots.",
+            "Canadian Side – Journey Behind the Falls: Get behind the Horseshoe Falls for unique perspectives and close-up shots of the cascading water.",
+            "American Side – Observation Tower: Provides panoramic views of the American Falls and Horseshoe Falls. Ideal for wide shots and capturing the falls' full breadth.",
+            "American Side – Cave of the Winds: Offers dynamic shots from the Hurricane Deck, where you’re right next to the Bridal Veil Falls. Be prepared to get wet and protect your equipment.",
+            "American Side – Goat Island: Offers unique viewpoints such as Terrapin Point for close-up views of the Horseshoe Falls and Luna Island for different angles of the American Falls.",
+            "Night Shots: The falls are illuminated with colorful lights nightly, creating vibrant photo opportunities against a dark sky. Experiment with different color effects.",
+            "Leading Lines: Utilize the flow of the water or surrounding pathways to direct the viewer’s eye towards the falls.",
+            "Foreground Interest: Incorporate elements like mist, rainbows, or nearby landscape features to add depth and context.",
+            "Symmetry: The natural symmetry of the Horseshoe Falls makes for compelling compositions, especially from direct frontal views.",
+            "Rainbows: Capture rainbows that often appear in the mist, adding a colorful and magical element to your photos.",
+            "Long Exposure: Use a tripod and ND filter to achieve silky, smooth water effects during long exposure shots."
+        ]
+    ),
+    Landmark(
+        name: "Big Ben",
+        coordinate: CLLocationCoordinate2D(latitude: 51.5007, longitude: -0.1246),
+        imageNames: ["BigBen1", "BigBen2", "BigBen3"],
+        city: "London",
+        state: "England",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon offers warm, soft light and potentially stunning rainbows. Arrive early to set up and capture the warm light reflecting off the buildings.",
+            "Midday: Bright sunlight can create high contrast and strong shadows. Use a polarizing filter to reduce glare and enhance contrast. Be mindful of glare and overexposed highlights.",
+            "Sunrise and Sunset: Sunrise can provide a serene atmosphere with less crowded conditions, while sunset can cast a warm glow on the building. Plan to capture both the changing sky and Big Ben as the light shifts.",
+            "Blue Hour: Just before sunrise or after sunset, the soft, diffused light can create a dramatic and atmospheric shot with Big Ben illuminated against a deep blue sky. Use a tripod for stability and clarity.",
+            "Front View: Capture Big Ben from Westminster Bridge for a classic, iconic shot including the bridge’s architectural elements and the River Thames. Position yourself to frame Big Ben with the bridge’s features.",
+            "South Bank of the Thames: Provides a broader perspective of Big Ben with the river in the foreground. Great for capturing reflections and the clock tower within the cityscape. Use a wide-angle lens to include more context.",
+            "Victoria Tower Gardens: Offers an elevated view with park elements framing Big Ben. Explore different spots in the park for unique compositions and perspectives.",
+            "From the London Eye: An elevated view provides a sweeping panorama of the city, including Big Ben and other landmarks. Bring a telephoto lens to zoom in on details or capture wider cityscapes.",
+            "St. Stephen’s Entrance: Offers views of Big Ben and the Gothic architecture of the Houses of Parliament. Ideal for detailed architectural shots and capturing both Big Ben and its surroundings.",
+            "The Embankment: Provides classic views across the Thames with potential for dramatic skies and reflections. Shoot during low tide for clearer reflections and use a tripod for stability.",
+            "Reflections: Capture reflections of Big Ben in the Thames or nearby puddles for a creative and visually striking perspective. This adds an extra layer of interest to your photos.",
+            "Foreground Interest: Incorporate elements like the bridge, park, or river to add depth and context to your shots. This helps to create a more dynamic composition.",
+            "Symmetry and Lines: Utilize Big Ben’s symmetrical design and lines from the surrounding architecture or bridges to create visually compelling compositions. Position yourself for balanced and centered shots.",
+            "Wide-Angle Lens: Ideal for capturing Big Ben in relation to its surroundings, including the Thames and nearby landmarks. Great for expansive views and context.",
+            "Telephoto Lens: Useful for focusing on details of Big Ben’s clock face or for shots from a distance. Allows you to zoom in on intricate details without distortion.",
+            "Tripod: Essential for low-light conditions, such as Blue Hour or night photography, to ensure stability and clarity. Helps avoid camera shake and blurriness in dim lighting."
+        ]
+    ),
+    Landmark(
+        name: "Empire State Building",
+        coordinate: CLLocationCoordinate2D(latitude: 40.748817, longitude: -73.985428),
+        imageNames: ["EmpireState1", "EmpireState2", "EmpireState3"],
+        city: "New York",
+        state: "New York",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon offers warm, soft light and can highlight the building’s architectural details. Arrive early to capture the building with the changing light and potential reflections.",
+            "Midday: Bright sunlight can create high contrast and strong shadows. Use a polarizing filter to manage glare and enhance contrast. Be cautious of glare and overexposed highlights.",
+            "Sunrise and Sunset: Sunrise can create beautiful hues and reflections on the city, while sunset offers a golden or reddish glow. Capture the transition from daylight to the illuminated cityscape.",
+            "Blue Hour: The period just before sunrise or after sunset provides a deep blue backdrop with the Empire State Building illuminated. Use a tripod for stability and clarity to capture the city lights.",
+            "From the Base (Street Level): Offers a dramatic, up-close perspective of the building’s height. Look for foreground elements like street scenes or traffic to add context. Use a wide-angle lens to capture the building’s full height.",
+            "Top of the Rock Observation Deck (Rockefeller Center): Provides a high vantage point with sweeping views of the Empire State Building and the cityscape. Capture the building from above and include other landmarks for a comprehensive view.",
+            "The Empire State Building Observation Deck: Unique elevated views of the city. Capture in different directions to include various parts of the skyline. A telephoto lens can help with detailed shots.",
+            "From Brooklyn (DUMBO or Brooklyn Heights): Great vantage point with the Empire State Building framed by the Brooklyn Bridge or other landmarks. Ideal for capturing the skyline at dusk or night when illuminated.",
+            "From Times Square: Offers a lively backdrop with the Empire State Building in the distance. Capture the contrast between the bustling area of Times Square and the majestic building.",
+            "Reflections: Look for reflections of the Empire State Building in nearby glass buildings or puddles for an artistic touch. This can add depth and creativity to your photos.",
+            "Foreground Interest: Use street-level elements such as vehicles, pedestrians, or architectural details to add context and create more engaging compositions.",
+            "Symmetry and Lines: Utilize the building’s vertical lines and surrounding architecture to create visually compelling compositions. Position yourself to capture balanced and centered shots.",
+            "Wide-Angle Lens: Ideal for capturing the full height of the building from street level and including the surrounding context. Great for expansive cityscapes.",
+            "Telephoto Lens: Useful for focusing on architectural details or capturing the building from a distance. Allows you to zoom in without distortion.",
+            "Tripod: Essential for low-light conditions, such as during Blue Hour or nighttime photography, to ensure stability and clarity. Helps avoid camera shake."
+        ]
+    ),
+    Landmark(
+        name: "Chichen Itza",
+        coordinate: CLLocationCoordinate2D(latitude: 20.6843, longitude: -88.5678),
+        imageNames: ["ChichenItza1", "ChichenItza2", "ChichenItza3"],
+        city: "Tinum",
+        state: "Yucatán",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon provides soft light, ideal for capturing the details of the structures. Arrive early to catch the warm light and fewer crowds.",
+            "Midday: The sun is directly overhead, creating strong shadows and high contrast. Use a polarizing filter to manage glare and enhance contrast. Be mindful of intense sunlight and potential overexposure.",
+            "Sunrise and Sunset: Sunrise offers serene lighting and potentially beautiful reflections, while sunset provides a golden glow. Capture the transition from daylight to the illuminated site for dramatic effects.",
+            "Blue Hour: Just before sunrise or after sunset provides a deep blue backdrop with illuminated ruins. Use a tripod for stability and clarity to capture the city lights and changing sky colors.",
+            "From the Base of El Castillo (Temple of Kukulcán): Offers a classic, iconic view of the pyramid. Use a wide-angle lens to capture the entire pyramid and its surroundings. Position yourself to avoid distractions and include the surrounding context.",
+            "Side View of El Castillo: Highlights the depth and intricate steps of the pyramid. Look for angles that showcase the pyramid’s shadow and textures for a different perspective.",
+            "Detail Shots: Focus on intricate carvings and architectural details, such as serpent heads and stone reliefs. Use a telephoto lens to capture these details without getting too close.",
+            "Wide Shots: Capture broader views of the site, including multiple structures and the surrounding landscape. Shoot from elevated points or site edges to include more context and showcase the site’s scale.",
+            "Chichen Itza Ball Court: Adds historical context and visual interest. Capture the court from various angles to show its length and the unique features of the surrounding structures.",
+            "Temple of the Warriors: Highlights another important structure with impressive columns and carvings. Shoot from different angles to capture both the columns and their surroundings.",
+            "El Caracol (The Observatory): Provides a unique view with its circular structure. Frame it with the surrounding jungle for added context and to emphasize its distinct shape.",
+            "Leading Lines: Use pathways, steps, and architectural lines to guide the viewer’s eye toward the main subject, such as El Castillo. This technique enhances composition and draws attention to key features.",
+            "Symmetry and Patterns: Utilize the symmetrical design of the pyramid and other structures for balanced compositions. Position yourself to capture centered and harmonious shots.",
+            "Reflections: After rainfall, look for puddles that might reflect the ruins for creative shots. Reflections add an extra layer of interest and artistry to your photos.",
+            "Silhouettes: Capture the ruins against the setting sun or vibrant sky for dramatic silhouettes. This technique highlights the structure’s shape and provides a striking visual effect.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the pyramid and large structures from street level. Great for expansive shots of the site.",
+            "Telephoto Lens: Useful for close-up shots of carvings and details from a distance. Allows you to zoom in on specific features without distortion.",
+            "Tripod: Essential for low-light conditions such as during sunrise or sunset. Provides stability and helps avoid camera shake.",
+        ]
+    ),
+    Landmark(
+        name: "Monte Alban",
+        coordinate: CLLocationCoordinate2D(latitude: 17.0433, longitude: -96.7675),
+        imageNames: ["MonteAlban1", "MonteAlban2", "MonteAlban3"],
+        city: "Oaxaca",
+        state: "Oaxaca",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon provides soft light, ideal for capturing the details of the structures. Arrive early to enjoy the warm light and fewer crowds.",
+            "Midday: Strong, direct sunlight highlights textures and details but may create harsh shadows. Use a polarizing filter to manage glare and contrast. Be prepared for bright conditions.",
+            "Sunrise and Sunset: Sunrise offers serene lighting and potential reflections, while sunset provides a golden glow. Use a tripod for stability and capture the site with the changing sky colors.",
+            "From the Main Plaza: Offers a classic view of the central area and the surrounding structures. Use a wide-angle lens to capture the full extent of the plaza and its architectural elements.",
+            "From the North Platform: Provides a high vantage point with expansive views of the site and the valley. Capture wide shots to showcase the layout and landscape. Look for interesting compositions with the surrounding scenery.",
+            "Detail Shots: Focus on intricate carvings and architectural elements. Use a telephoto lens to capture close-ups of details and textures that might be missed in wider shots.",
+            "The Ball Court: Adds historical context and visual interest. Capture the court from various angles to highlight its length and the surrounding ruins.",
+            "From the Observatory: Provides a unique perspective with its circular structure. Frame it with the surrounding landscape to emphasize its shape and historical significance.",
+            "Overhead Shots: Use a drone (if allowed) or capture from elevated viewpoints to show the layout of the site and its surroundings from a unique angle.",
+            "Foreground Interest: Include elements like surrounding vegetation or visitors to add depth and context to your photos. This can help create more engaging compositions.",
+            "Leading Lines: Use pathways, steps, and architectural lines to guide the viewer’s eye toward main subjects such as the central plaza or key structures. This technique enhances composition.",
+            "Symmetry and Patterns: Utilize the symmetrical design of the plazas and structures for balanced compositions. Position yourself to capture centered and harmonious shots.",
+            "Silhouettes: Capture the ruins against the setting sun or vibrant sky for dramatic silhouettes. This technique emphasizes the structure’s shape and creates striking visuals.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the plaza and large structures. Great for expansive shots of the site.",
+            "Telephoto Lens: Useful for close-up shots of carvings and details from a distance. Allows zooming in without distortion and capturing intricate features.",
+            "Tripod: Essential for low-light conditions such as during sunrise or sunset. Provides stability and avoids camera shake.",
+           ]
+    ),
+    Landmark(
+        name: "Chapultepec Castle",
+        coordinate: CLLocationCoordinate2D(latitude: 19.4260, longitude: -99.1811),
+        imageNames: ["Chapultepec1", "Chapultepec2", "Chapultepec3"],
+        city: "Mexico City",
+        state: "Mexico City",
+        tipsAndTricks: [
+            "Golden Hour: Early morning or late afternoon provides soft light, ideal for capturing the castle and gardens. Arrive early to take advantage of the gentle light and quieter surroundings.",
+            "Midday: Direct sunlight vividly illuminates the castle and gardens but can create strong shadows and highlights. Use a polarizing filter to manage glare and enhance colors. Be mindful of harsh contrasts.",
+            "Sunrise and Sunset: Sunrise offers serene lighting and potential reflections, while sunset provides a warm glow. Use a tripod for stability and capture the changing colors of the sky. Shoot both the castle and the sunset backdrop for dramatic effects.",
+            "From the Front View: Capture a classic, straight-on view of the castle’s facade. Use a wide-angle lens to include the surrounding gardens and cityscape in your shots.",
+            "From the Castle’s Terraces: Provides panoramic views of Mexico City. Capture wide shots from these vantage points to showcase the expansive cityscape and architectural features of the castle.",
+            "Detail Shots: Focus on the intricate architecture and decorative elements of the castle. Use a telephoto or macro lens to capture close-ups of carvings, ironwork, and textures.",
+            "The Castle Gardens: Frame the castle with the lush gardens in the foreground to create depth and context in your photos. Capture various angles to highlight floral and sculptural elements.",
+            "From Elevated Points: Offers unique perspectives and detailed views of the surroundings. Experiment with different angles to capture interesting compositions of the gardens and city views.",
+            "Foreground Interest: Include elements like flowers, sculptures, or garden pathways to add depth and context. This technique helps to create more engaging and visually interesting photos.",
+            "Leading Lines: Utilize pathways, garden beds, or architectural lines to guide the viewer’s eye towards the main subject, such as the castle or a specific feature, enhancing composition.",
+            "Symmetry and Patterns: Use the symmetrical design of the castle and gardens for balanced compositions. Look for symmetrical elements in both the architecture and landscaping for harmonious shots.",
+            "Reflections: After rainfall, look for puddles or fountains that might reflect the castle for creative and visually engaging shots. Reflections can add an artistic layer to your photos.",
+            "Silhouettes: Capture the castle against a sunset or vibrant sky for dramatic silhouettes. This technique emphasizes the castle’s shape and adds a striking visual element.",
+            "Wide-Angle Lens: Ideal for capturing the full scale of the castle and its gardens. Great for expansive shots that include both the architecture and the surrounding landscape.",
+            "Telephoto Lens: Useful for close-up shots of architectural details and distant features. Allows zooming in on specific elements without distortion.",
+            "Tripod: Essential for stability, especially during low-light conditions such as sunrise or sunset. Helps avoid camera shake and ensures clear, sharp images.",
+        ]
+    )
+       
+        
+]
+//This is the UI for the front page, with the head that has the name of the app and the logo, and then the three icons that are the mapview, the tips and tricks and lastly the Posts view
+struct ContentView: View {
+    @State private var posts: [UserPost] = []
+    @State private var interstitial: GADInterstitialAd?
+    @State private var showInterstitialAd = false
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color.white
+                    .edgesIgnoringSafeArea(.all)
+                // Set background color to light gray
+                
+                GeometryReader { geometry in
+                    VStack {
+                        Color.customGreen
+                            .frame(height: geometry.size.height * 0.210) // Adjust the multiplier as needed
+                            .edgesIgnoringSafeArea(.top)
+                        
+                        
+                        Spacer()
+                        
+                    }
+                }
+                
+                VStack {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text("PhotoSight")
+                                .font(.title)
+                                .bold()
+                                .foregroundColor(.white)
+                                .fontDesign(.rounded)
+                            Text("Welcome!, Accueillir!, Bienvenido!")
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                                .fontDesign(.rounded)
+                            
+                            
+                        }
+                        Spacer()
+                        Image("appicon") // Replace with the actual name of your App Icon
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .clipShape(Circle())
+                        
+                        
+                    }
+                    .padding()
+                    
+                    
+                    
+                    HStack {
+                        Text("Categories")
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                            .fontDesign(.rounded)
+                        Spacer()
+                    }
+                    .padding()
+                    
+                    
+                    HStack(spacing: 35) {
+                                    CategoryView(systemImageName: "location.viewfinder", color: .white, destination: AnyView(MapView()), interstitial: $interstitial)
+                                    CategoryView(systemImageName: "lightbulb.max.fill", color: .white, destination: AnyView(TipsAndTricks()), interstitial: $interstitial)
+                                    CategoryView(systemImageName: "bubble.left.and.bubble.right.fill", color: .white, destination: AnyView(UserPostsView()), interstitial: $interstitial)
+                                }
+                    .padding(.bottom)
+                    
+                    Text("Top Landmarks")
+                        .font(.headline)
+                        .padding([.leading, .top])
+                        .foregroundStyle(.black)
+                        .fontDesign(.rounded)
+                    
+                    ScrollView {
+                        VStack {
+                            ForEach(landmarks) { landmark in
+                                LandmarkView(landmark: landmark)
+                                
+                            }
+                        }
+                    }
+                    .frame(maxHeight: 600) // Adjust this height as needed
+                }
+                .navigationBarHidden(true)
+            }
+        }
+        .onAppear {
+            loadInterstitialAd()
+        }
+    }
+    func loadInterstitialAd() {
+        let request = GADRequest()
+        GADInterstitialAd.load(withAdUnitID: "ca-app-pub-5301480896157411/3901276743", // Replace with your actual Ad Unit ID
+            request: request, completionHandler: { ad, error in
+            if let error = error {
+                print("Failed to load interstitial ad with error: \(error.localizedDescription)")
+                
+                return
+            }
+            interstitial = ad
+            
+        })
+    }
+}
+    // Modify the CategoryView to accept a destination view. This are the three icons and how we want them to look like.
+  
+import SwiftUI
+import GoogleMobileAds
+
+struct CategoryView<Destination: View>: View {
+    var systemImageName: String
+    var color: Color
+    var destination: Destination
+    @Binding var interstitial: GADInterstitialAd?
+    
+    @State private var shouldNavigate = false
+    @State private var showAd = false
+    
+    // Coordinator to handle delegate methods
+    class Coordinator: NSObject, GADFullScreenContentDelegate {
+        var parent: CategoryView
+        
+        init(parent: CategoryView) {
+            self.parent = parent
+        }
+        
+        func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+            // Ad has been dismissed, no need to trigger any action here
+        }
+        
+        func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+            print("Failed to present full screen content with error: \(error.localizedDescription)")
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+    
+    var body: some View {
+        VStack {
+            // Hidden NavigationLink to control navigation
+            NavigationLink(
+                destination: destination
+                    .onAppear {
+                        // Trigger the ad after navigation
+                        if let interstitial = interstitial {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                let rootViewController = UIApplication.shared.windows.first?.rootViewController
+                                interstitial.fullScreenContentDelegate = makeCoordinator()
+                                interstitial.present(fromRootViewController: rootViewController!)
+                            }
+                        }
+                    },
+                isActive: $shouldNavigate,
+                label: { EmptyView() }
+            )
+            .hidden()
+            
+            Button(action: {
+                // Trigger navigation first
+                self.shouldNavigate = true
+            }) {
+                VStack {
+                    Image(systemName: systemImageName)
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(color)
+                        .cornerRadius(10)
+                        .padding()
+                }
+                .frame(width: 90, height: 90)
+                .background(Color.customGreen)
+                .cornerRadius(20)
+            }
+        }
+    }
+}
+
+
+import SwiftUI
+//This is were the top landmarks are shown and for this all the things to make them how we want them look like
+struct LandmarkView: View {
+    var landmark: Landmark
+
+    var body: some View {
+        NavigationLink(destination: LandmarkDetailView(landmark: landmark)) {
+            HStack {
+                Image(landmark.imageNames.first ?? "")
+                    .resizable()
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(10)
+                VStack(alignment: .leading) {
+                    Text(landmark.name)
+                        .font(.headline)
+                        .foregroundStyle(.black)
+                        .fontDesign(.rounded)
+                    Text(landmark.city)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .fontDesign(.rounded)
+                    HStack {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                        Text(landmark.state)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .fontDesign(.rounded)
+                    }
+                }
+                Spacer()
+            }
+            .padding()
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+
+    
+    struct CustomTabBar: View {
+        var body: some View {
+            HStack {
+                Spacer()
+                TabBarButton(imageName: "house.fill")
+                Spacer()
+                TabBarButton(imageName: "star.fill")
+                Spacer()
+                TabBarButton(imageName: "person.fill")
+                Spacer()
+            }
+            
+            .padding()
+            .frame(height: 55) // Adjust the height to make the tab bar smaller
+            .background(Color.customGreen)
+            .cornerRadius(30)
+        }
+    }
+    
+    struct TabBarButton: View {
+        var imageName: String
+        var body: some View {
+            VStack {
+                Image(systemName: imageName)
+                    .font(.title2)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 5) // Add padding to move the icon lower
+                
+            }
+        }
+    }
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ContentView()
+        }
+    }
+
